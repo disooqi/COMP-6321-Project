@@ -3,8 +3,10 @@ from scipy.io import arff
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import KFold
 
-data, meta = arff.loadarff(r'data\diabetic_retinopathy\messidor_features.arff')
-
+# Data path to diabetic_retinopathy
+data, meta = arff.loadarff(r'data/diabetic_retinopathy/messidor_features.arff')
+# Data path to seismic-bumps
+data, meta = arff.loadarff(r'data/seismic-bumps/seismic-bumps.arff')
 target = list()
 X = np.zeros((19,), dtype='float32')
 
