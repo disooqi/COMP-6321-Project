@@ -48,6 +48,7 @@ param_grid = {
     'mlp__solver': ['sgd', 'adam', 'lbfgs'],
     'mlp__alpha': [1e-1, 1e-3, 1e-5],
     'mlp__hidden_layer_sizes': [(5, 2), (4, 3), (4, 4), (5, 5)],
+    'mlp__activation': ['identity', 'logistic', 'tanh', 'relu'],
 
 }
 
