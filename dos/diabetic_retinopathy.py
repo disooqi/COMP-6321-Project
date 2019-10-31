@@ -1,76 +1,78 @@
 import numpy as np
+import pandas as pd
 from scipy.io import arff
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, OrdinalEncoder, StandardScaler
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split, cross_val_score, KFold
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import train_test_split, cross_val_score, KFold, GridSearchCV
 
 
 # 'C:\Users\disoo\Documents\COMP-6321-Project\data\diabetic_retinopathy\messidor_features.arff'
 dataset, meta = arff.loadarff(r'..\data\diabetic_retinopathy\messidor_features.arff')
 
-target = list()
-X = None
-for sample in dataset:
-    sample_features = sample.tolist()
-    target.append(sample_features[-1])
-    arr = np.array(sample_features[:-1], dtype=np.float16)
-    X = np.r_['0,2', X, arr] if X is not None else arr
-else:
-    y = np.array(target, dtype=np.int8)
+dataset = pd.DataFrame(dataset)
+y = LabelEncoder().fit_transform(dataset.pop('Class').values)
+
+cat_si_step = ('si', SimpleImputer(strategy='constant', fill_value=-99))  # This is for training
+ohe_step = ('ohe', OneHotEncoder(sparse=False, handle_unknown='ignore'))  # This is for testing
+oe_step = ('le', OrdinalEncoder())
+num_si_step = ('si', SimpleImputer(strategy='median'))
+sc_step = ('sc', StandardScaler())
+
+cat_pipe = Pipeline([cat_si_step, ohe_step])
+num_pipe = Pipeline([num_si_step, sc_step])
+bin_pipe = Pipeline([oe_step])
+
+transformers = [
+    ('num', num_pipe, ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17']),
+    ('bin', bin_pipe, ['0', '1', '18']),
+]
+
+ct = ColumnTransformer(transformers=transformers)
+# X_transformed = ct.fit_transform(dataset)
+# print(X_transformed)
 
 
-'''
-Multi-Layer Perceptron (MLP) 
-'''
-mlp_01 = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 7), random_state=5)
-pline = make_pipeline(StandardScaler(), mlp_01)
-cv_scores = cross_val_score(pline, X, y, cv=5, scoring='accuracy')
-print(f'Multi-Layer Perceptron (MLP) DEV Accuracy: {cv_scores.mean():0.2f} and the 95% confidence interval of the score estimate is  '
-      f'{cv_scores.std()*2:0.2f}')
-# print("Accuracy: " % (scores.mean(), scores.std() * 2))
+ml_pipe = Pipeline([
+    ('X_transform', ct),
+    ('mlp', MLPClassifier(activation='identity', solver='sgd', alpha=1e-1, hidden_layer_sizes=(4, 4))),
+])
 
-scaled_X = StandardScaler().fit_transform(X)
-mlp_02 = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=5)
-mlp_02.fit(scaled_X, y)
-pred = mlp_02.predict(scaled_X)
-print('Multi-Layer Perceptron (MLP) Training Acc: ', np.around(np.mean(pred == y), 2), " ... ", mlp_02.score(scaled_X, y))
+kf = KFold(n_splits=5, shuffle=True)
+# cv_score = cross_val_score(ml_pipe, dataset, y, cv=kf).mean()
+
+param_grid = {
+    'X_transform__num__si__strategy': ['mean', 'median'],
+    'mlp__solver': ['sgd', 'adam', 'lbfgs'],
+    'mlp__alpha': [1e-1, 1e-3, 1e-5],
+    'mlp__hidden_layer_sizes': [(10,), (20,), (5, 2), (4, 3), (4, 4)],
+    'mlp__activation': ['identity', 'logistic', 'tanh', 'relu'],
+}
+
+knn_pipe = Pipeline([
+    ('X_transform', ct),
+    ('knn', KNeighborsClassifier(n_neighbors=5)),
+])
+
+# knn_pipe.fit(dataset, y)
+# print(f'All data score: {knn_pipe.score(dataset, y)}')
+
+knn_param_grid = {
+    'X_transform__num__si__strategy': ['mean', 'median'],
+    'knn__n_neighbors': range(1, 10),
+}
+
+gs = GridSearchCV(ml_pipe, param_grid, cv=kf)
+gs.fit(dataset, y)
+print(gs.best_params_)
+print('The CV best score:', gs.best_score_)
+# print(pd.DataFrame(gs.cv_results_))
+
+print(f'The train set score: {gs.score(dataset, y)} ')
 
 
-'''
-Nearest Neighbors
-'''
-n_neighbors = 70
-neigh_01 = KNeighborsClassifier(n_neighbors=n_neighbors)
-pline = make_pipeline(StandardScaler(), neigh_01)
-cv_scores = cross_val_score(pline, X, y, cv=5, scoring='accuracy')
-print(f'Nearest Neighbors Classifier DEV Accuracy: {cv_scores.mean():0.2f} and the 95% confidence interval of the score estimate is  '
-      f'{cv_scores.std()*2:0.2f}')
-# print("Accuracy: " % (scores.mean(), scores.std() * 2))
 
-scaled_X = StandardScaler().fit_transform(X)
-neigh_02 = KNeighborsClassifier(n_neighbors=n_neighbors)
-neigh_02.fit(scaled_X, y)
-pred = neigh_02.predict(scaled_X)
-print('Nearest Neighbors Classifier Training Acc: ', np.around(np.mean(pred == y), 2), " ... ", neigh_02.score(scaled_X, y))
 
-# kf = KFold(n_splits=5, shuffle=True)
-# train_agg = 0
-# test_agg = 0
-# for train_index, test_index in kf.split(X):
-#     X_train, X_test = X[train_index], X[test_index]
-#
-#     y_train, y_test = y[train_index], y[test_index]  #
-#
-#     lrc = LogisticRegression(fit_intercept=False, penalty='l1', solver='liblinear')
-#     lrc.fit(X_train, y_train)
-#
-#     train_pred = lrc.predict(X_train)
-#     test_pred = lrc.predict(X_test)
-#     train_agg += np.around(np.mean(train_pred == y_train), 2) * 100
-#     test_agg += np.around(np.mean(test_pred == y_test), 2) * 100
-# else:
-#
-#     print('Training Avg: ', train_agg / 5, '%')
-#     print('Testing Avg: ', test_agg / 5, '%')
