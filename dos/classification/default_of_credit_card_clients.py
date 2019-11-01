@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from scipy.io import arff
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, OrdinalEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
@@ -8,25 +9,13 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, KFold, GridSearchCV
 
+#  data/default_of_credit_card_clients/default_of_credit_card_clients.xls
+dataset = pd.read_excel(r'..\..\data\default_of_credit_card_clients\default_of_credit_card_clients.xls', skiprows=1)
 
-dataset = pd.read_csv(r'..\data\adult\adult.data', header=None, skipinitialspace=True,
-                      names=['age', 'workclass', 'fnlwgt', 'education', 'education-num', 'marital-status',
-                             'occupation', 'relationship', 'race', 'sex', 'capital-gain', 'capital-loss',
-                             'hours-per-week', 'native-country', 'target'], na_values=['?'], keep_default_na=False)
+dataset.pop('ID')
+y = LabelEncoder().fit_transform(dataset.pop('default payment next month').values)
 
-testset = pd.read_csv(r'..\data\adult\adult.test', header=None, skipinitialspace=True,
-                      names=['age', 'workclass', 'fnlwgt', 'education', 'education-num', 'marital-status',
-                             'occupation', 'relationship', 'race', 'sex', 'capital-gain', 'capital-loss',
-                             'hours-per-week', 'native-country', 'target'],
-                      skiprows=1, na_values=['?'], keep_default_na=False)
-# print(dataset.dtypes.head(20))
-# print(np.array([dt.kind for dt in dataset.dtypes]))
-
-
-y = LabelEncoder().fit_transform(dataset.pop('target').values)
-y_test = LabelEncoder().fit_transform(testset.pop('target').values)
-
-cat_si_step = ('si', SimpleImputer(strategy='constant', fill_value='MISSING'))  # This is for training
+cat_si_step = ('si', SimpleImputer(strategy='constant', fill_value=-99))  # This is for training
 ohe_step = ('ohe', OneHotEncoder(sparse=False, handle_unknown='ignore'))  # This is for testing
 oe_step = ('le', OrdinalEncoder())
 num_si_step = ('si', SimpleImputer(strategy='median'))
@@ -37,11 +26,13 @@ num_pipe = Pipeline([num_si_step, sc_step])
 bin_pipe = Pipeline([oe_step])
 
 transformers = [
-    ('cat', cat_pipe, ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'native-country']),
-    ('num', num_pipe, ['age', 'fnlwgt', 'education-num', 'capital-gain', 'capital-loss', 'hours-per-week']),
-    ('bin', bin_pipe, ['sex']),
+    ('cat', cat_pipe, ['EDUCATION', 'MARRIAGE', 'PAY_0', 'PAY_2', 'PAY_3', 'PAY_4', 'PAY_5', 'PAY_6']),
+    ('num', num_pipe, ['LIMIT_BAL', 'AGE', 'BILL_AMT1', 'BILL_AMT2', 'BILL_AMT3', 'BILL_AMT4', 'BILL_AMT5', 'BILL_AMT6',
+                       'PAY_AMT1', 'PAY_AMT2', 'PAY_AMT3', 'PAY_AMT4', 'PAY_AMT5', 'PAY_AMT6']),
+    ('bin', bin_pipe, ['SEX']),
 ]
 ct = ColumnTransformer(transformers=transformers)
+# X_transformed = ct.fit_transform(dataset)
 # print(X_transformed)
 
 ml_pipe = Pipeline([
@@ -80,6 +71,4 @@ print('The CV best score:', gs.best_score_)
 # print(pd.DataFrame(gs.cv_results_))
 
 print(f'The train set score: {gs.score(dataset, y)} ')
-print(f'The test set score: {gs.score(testset, y_test)} ')
-
 

@@ -1,8 +1,3 @@
-'''
-__created__= '31 Oct 2019'
-__developer__ = 'disooqi@gmail.com'
-'''
-
 import numpy as np
 import pandas as pd
 from scipy.io import arff
@@ -14,19 +9,13 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, KFold, GridSearchCV
 
-dataset = pd.read_csv(r'..\data\Steel_plates_faults\Faults.NNA', header=None, delimiter='	',
-    names=['X_Minimum', 'X_Maximum', 'Y_Minimum', 'Y_Maximum', 'Pixels_Areas', 'X_Perimeter', 'Y_Perimeter',
-           'Sum_of_Luminosity', 'Minimum_of_Luminosity', 'Maximum_of_Luminosity', 'Length_of_Conveyer',
-           'TypeOfSteel_A300', 'TypeOfSteel_A400', 'Steel_Plate_Thickness', 'Edges_Index', 'Empty_Index',
-           'Square_Index', 'Outside_X_Index', 'Edges_X_Index', 'Edges_Y_Index', 'Outside_Global_Index', 'LogOfAreas',
-           'Log_X_Index', 'Log_Y_Index', 'Orientation_Index', 'Luminosity_Index', 'SigmoidOfAreas', 'Pastry',
-           'Z_Scratch', 'K_Scatch', 'Stains', 'Dirtiness', 'Bumps', 'Other_Faults'])
 
-# y = dataset[['Pastry', 'Z_Scratch', 'K_Scatch', 'Stains', 'Dirtiness', 'Bumps', 'Other_Faults']]
-y = dataset.loc[:, 'Pastry':'Other_Faults']
-dataset.drop(['Pastry', 'Z_Scratch', 'K_Scatch', 'Stains', 'Dirtiness', 'Bumps', 'Other_Faults'], axis=1, inplace=True)
+data, meta = arff.loadarff(r'..\..\data\seismic-bumps\seismic-bumps.arff')
+dataset = pd.DataFrame(data)
 
-cat_si_step = ('si', SimpleImputer(strategy='constant', fill_value=-99))  # This is for training
+y = LabelEncoder().fit_transform(dataset.pop('class').values)
+
+cat_si_step = ('si', SimpleImputer(strategy='constant', fill_value='MISSING'))  # This is for training
 ohe_step = ('ohe', OneHotEncoder(sparse=False, handle_unknown='ignore'))  # This is for testing
 oe_step = ('le', OrdinalEncoder())
 num_si_step = ('si', SimpleImputer(strategy='median'))
@@ -37,15 +26,11 @@ num_pipe = Pipeline([num_si_step, sc_step])
 bin_pipe = Pipeline([oe_step])
 
 transformers = [
-    ('cat', cat_pipe, ['Outside_Global_Index']),
-    ('num', num_pipe, ['X_Minimum', 'X_Maximum', 'Y_Minimum', 'Y_Maximum', 'Pixels_Areas', 'X_Perimeter', 'Y_Perimeter',
-                       'Sum_of_Luminosity', 'Minimum_of_Luminosity', 'Maximum_of_Luminosity', 'Length_of_Conveyer',
-                       'Steel_Plate_Thickness', 'Edges_Index', 'Empty_Index', 'Square_Index', 'Outside_X_Index',
-                       'Edges_X_Index', 'Edges_Y_Index', 'LogOfAreas', 'Log_X_Index', 'Log_Y_Index',
-                       'Orientation_Index', 'Luminosity_Index', 'SigmoidOfAreas']),
-    ('bin', bin_pipe, ['TypeOfSteel_A300', 'TypeOfSteel_A400']),
+    ('cat', cat_pipe, ['seismic', 'seismoacoustic', 'ghazard']),
+    ('num', num_pipe, ['genergy', 'gpuls', 'gdenergy', 'gdpuls', 'nbumps', 'nbumps2', 'nbumps3', 'nbumps4', 'nbumps5',
+                       'nbumps6', 'nbumps7', 'nbumps89', 'energy', 'maxenergy']),
+    ('bin', bin_pipe, ['shift']),
 ]
-
 ct = ColumnTransformer(transformers=transformers)
 # X_transformed = ct.fit_transform(dataset)
 # print(X_transformed)
