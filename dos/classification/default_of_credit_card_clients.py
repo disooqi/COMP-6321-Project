@@ -64,7 +64,7 @@ knn_param_grid = {
     'knn__n_neighbors': range(1, 10),
 }
 
-gs = GridSearchCV(ml_pipe, param_grid, cv=kf)
+gs = GridSearchCV(ml_pipe, param_grid, cv=kf, scoring='accuracy')
 gs.fit(dataset, y)
 print(gs.best_params_)
 print('The CV best score:', gs.best_score_)
