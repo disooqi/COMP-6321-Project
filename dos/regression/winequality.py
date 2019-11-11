@@ -26,7 +26,7 @@ dataset_w['red?'] = False
 # print(dataset_w)
 
 dataset = pd.concat([dataset_w, dataset_r, ], ignore_index=True)
-y = LabelEncoder().fit_transform(dataset.pop('quality').values)
+y = dataset.pop('quality').values
 
 cat_si_step = ('si', SimpleImputer(strategy='constant', fill_value=-99))  # This is for training
 ohe_step = ('ohe', OneHotEncoder(sparse=False, handle_unknown='ignore'))  # This is for testing
@@ -87,8 +87,8 @@ gs.fit(dataset, y)
 
 file_name = os.path.splitext(os.path.basename(__file__))[0]
 with open(f'{file_name}-result.txt', mode='a', encoding='utf-8') as handler:
-    handler.write(f'The CV best neg_mean_absolute_error score: {gs.best_score_:.4f}\n')
-    handler.write(f'The train set neg_mean_absolute_error score: {gs.score(dataset, y):.4f}\n')
+    handler.write(f'The CV best R2 score: {gs.best_score_:.4f}\n')
+    handler.write(f'The train set R2 score: {gs.score(dataset, y):.4f}\n')
     handler.write(f'{gs.best_params_}\n')
     handler.write(f'{gs.best_estimator_}\n')
     # handler.write(f'{gs.grid_scores_}\n')
