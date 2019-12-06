@@ -25,6 +25,9 @@ from sklearn.preprocessing import OneHotEncoder, LabelEncoder, OrdinalEncoder, S
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
+import os
+
+CURDIR = os.getcwd()+'/datasets/regression'
 
 
 def preprocessFeatures(X, index_, auto=False):
@@ -234,8 +237,8 @@ def adaRegressor(X, y, cv_size = 5):
 
 # Wine
 
-path_red = '/Users/sandeepchowdaryannabathuni/desktop/project/datasets/winequality-red.csv'
-path_white = '/Users/sandeepchowdaryannabathuni/desktop/project/datasets/winequality-white.csv'
+path_red = CURDIR + '\datasets\winequality-red.csv'
+path_white = CURDIR + '\datasets\winequality-white.csv'
 data_red = pd.read_csv(path_red, delimiter=';').to_numpy()
 data_white = pd.read_csv(path_white, delimiter=';').to_numpy()
 
@@ -257,7 +260,7 @@ y = np.concatenate((y_red, y_white), axis=0)
 
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0, shuffle=True)
 
-ada = adaRegressor(X _train, y_train, 8)
+ada = adaRegressor(X_train, y_train, 8)
 #support_vector = SVR().fit(X_train, y_train)
 
 print('#'*10, 'Wine', '#'*10)
@@ -278,7 +281,7 @@ print('\n')
 
 # qsar_aquatic_toxicity
 
-path = '/Users/sandeepchowdaryannabathuni/desktop/project/datasets/qsar_aquatic_toxicity.csv'
+path = CURDIR + '\datasets\qsar_aquatic_toxicity.csv'
 data = pd.read_csv(path, delimiter=';', header=None).to_numpy()
 
 X_original = data[:, :data.shape[1] - 1]
@@ -286,7 +289,7 @@ y = data[:, data.shape[1] - 1]
 
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0, shuffle=True)
 
-ada = adaRegressor(X _train, y_train)
+ada = adaRegressor(X_train, y_train)
 
 print('#'*10, 'qsar_aquatic_toxicity', '#'*10)
 
@@ -304,8 +307,8 @@ print('\n')
 ################################################################################################################################################################################
 #student
 
-path_train = '/Users/sandeepchowdaryannabathuni/desktop/project/datasets/student-por.csv'
-path_test = '/Users/sandeepchowdaryannabathuni/desktop/project/datasets/student-mat.csv'
+path_train = CURDIR + '\datasets\student-por.csv'
+path_test = CURDIR + '\datasets\student-mat.csv'
 data_train = pd.read_csv(path_train, delimiter=';')
 
 data_train = preprocessFeatures(data_train, [], True).to_numpy()
@@ -323,7 +326,7 @@ y_test = data_test[:, data_test.shape[1] - 3:]
 
 
 #support_vector = MultiOutputRegressor(SVR()).fit(X_train, y_train)
-ada = adaMultiple(X _train, y_train)
+ada = adaMultiple(X_train, y_train)
 
 print('#'*10, 'student', '#'*10)
 
@@ -343,7 +346,7 @@ print('\n')
 
 #Concrete_Data
 
-path = '/Users/sandeepchowdaryannabathuni/desktop/project/datasets/Concrete_Data.xls'
+path = CURDIR + '\datasets\Concrete_Data.xls'
 dataset = pd.read_excel(path, skiprows=[1]).to_numpy()
 
 X_original = dataset[:, :dataset.shape[1]-1]
@@ -353,7 +356,7 @@ X_original = scale(X_original)
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0, shuffle=True)
 
 #support_vector = SVR().fit(X_train, y_train)
-ada = adaRegressor(X _train, y_train)
+ada = adaRegressor(X_train, y_train)
 
 print('#'*10, 'Concrete_Data', '#'*10)
 
@@ -376,7 +379,7 @@ print('\n')
 
 #parkinsons
 
-path = '/Users/sandeepchowdaryannabathuni/desktop/project/datasets/parkinson_train.txt'
+path = CURDIR + '\datasets\parkinson_train.txt'
 dataset = np.loadtxt(path, delimiter=',')
 
 X_original = dataset[:, :dataset.shape[1]-1]
@@ -386,7 +389,7 @@ X_original = scale(X_original)
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0, shuffle=True)
 
 #support_vector = SVR().fit(X_train, y_train)
-ada = adaRegressor(X _train, y_train)
+ada = adaRegressor(X_train, y_train)
 
 print('#'*10, 'parkinsons', '#'*10)
 
@@ -407,7 +410,7 @@ print('\n')
 
 #Bike
 
-path = '/Users/sandeepchowdaryannabathuni/desktop/project/datasets/hour.csv'
+path = CURDIR + '\datasets\hour.csv'
 dataset = pd.read_csv(path).to_numpy()[:,2:]
 
 X_original = dataset[:, :dataset.shape[1]-1]
@@ -417,7 +420,7 @@ X_original = scale(X_original)
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0, shuffle=True)
 
 #support_vector = SVR().fit(X_train, y_train)
-ada = adaRegressor(X _train, y_train)
+ada = adaRegressor(X_train, y_train)
 
 print('#'*10, 'Bike', '#'*10)
 
@@ -435,7 +438,7 @@ print('\n')
 ################################################################################################################################################################################
 
 #Facebook
-path = '/Users/sandeepchowdaryannabathuni/desktop/project/datasets/dataset_Facebook.csv'
+path = CURDIR + '\datasets\dataset_Facebook.csv'
 dataset = pd.read_csv(path, delimiter=';')
 
 y = dataset['Total Interactions']
@@ -466,7 +469,7 @@ X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.2
 
 print(X_train)
 #support_vector = SVR().fit(X_train, y_train)
-ada = adaRegressor(X _train, y_train)
+ada = adaRegressor(X_train, y_train)
 
 print('#'*10, 'Facebook', '#'*10)
 
@@ -485,7 +488,7 @@ print('\n')
 ################################################################################################################################################################################
 
 # #gpu
-path = '/nfs/home/a/a_jana/sgemm_product.csv'
+path = CURDIR + '\datasets\sgemm_product.csv'
 dataset = pd.read_csv(path, delimiter=',')
 
 y = dataset[['Run1 (ms)','Run2 (ms)','Run3 (ms)','Run4 (ms)']]
@@ -517,7 +520,7 @@ print('\n')
 
 # communities
 
-path = '/nfs/home/a/a_jana/communities.data'
+path = CURDIR + '\datasets\communities.data'
 
 dataset = pd.read_csv(path, header=None).replace('?', np.NaN)
 dataset = dataset.convert_objects(convert_numeric=True)
@@ -557,8 +560,8 @@ print('\n')
 
 # merck
 
-path_one = '/nfs/home/a/a_jana/ACT2_competition_training.csv'
-path_two = '/nfs/home/a/a_jana/ACT4_competition_training.csv'
+path_one = CURDIR + '\datasets\ACT2_competition_training.csv'
+path_two = CURDIR + '\datasets\ACT4_competition_training.csv'
 
 dataset_one = pd.read_csv(path_one)
 dataset_two = pd.read_csv(path_two)
