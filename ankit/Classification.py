@@ -137,33 +137,33 @@ def removeCorr(X, cutoff):
     temp = temp.drop(drop_index, axis=1)
     return temp.to_numpy()
 
-# def knn(X, y, cv_size = 5):
-#     """The following function is used to perform KN for classification.
-#     @X This is the feature vector of type numpy
-#     @y labels of type numpy
-#     @return It returns KNeighborsClassifier object
-#
-#     This function uses GridSearchCV to tune the parameters for the best performance
-#     The parameters are as follows:
-#     {
-#     'n_neighbors': (5,6,7,8,9,10,11,12),
-#     'weights': ('uniform', 'distance'),
-#     'algorithm': ('auto'),
-#     'p':(1,2)
-#     }"""
-#
-#     temp_cls_ = KNeighborsClassifier()
-#
-#     parameters = {
-#     'n_neighbors': (5,6,7,8,9,10,11,12),
-#     'weights': ('uniform', 'distance'),
-#     'p':(1,2),
-#     }
-#
-#     param_tuner_ = GridSearchCV(temp_cls_, parameters, cv=cv_size)
-#     param_tuner_.fit(X, y)
-#     cls = param_tuner_.best_estimator_.fit(X, y)
-#     return cls, param_tuner_.best_score_
+def knn(X, y, cv_size = 5):
+    """The following function is used to perform KN for classification.
+    @X This is the feature vector of type numpy
+    @y labels of type numpy
+    @return It returns KNeighborsClassifier object
+
+    This function uses GridSearchCV to tune the parameters for the best performance
+    The parameters are as follows:
+    {
+    'n_neighbors': (5,6,7,8,9,10,11,12),
+    'weights': ('uniform', 'distance'),
+    'algorithm': ('auto'),
+    'p':(1,2)
+    }"""
+
+    temp_cls_ = KNeighborsClassifier()
+
+    parameters = {
+    'n_neighbors': (5,6,7,8,9,10,11,12),
+    'weights': ('uniform', 'distance'),
+    'p':(1,2),
+    }
+
+    param_tuner_ = GridSearchCV(temp_cls_, parameters, cv=cv_size)
+    param_tuner_.fit(X, y)
+    cls = param_tuner_.best_estimator_.fit(X, y)
+    return cls, param_tuner_.best_score_
 
 
 def adaBoost(classifier, X, y, cv_size = 5):
@@ -220,143 +220,121 @@ def randomForest(X, y, cv_size = 5):
     return cls, param_tuner_.best_score_
 
 
-# def decisionTree(X, y, cv_size = 5):
-#     """The following function is used to perform decision tree for classification.
-#     @X This is the feature vector of type numpy
-#     @y labels of type numpy
-#     @return It returns DecisionTreeClassifier object
-#
-#     This function uses GridSearchCV to tune the parameters for the best performance
-#     The parameters are as follows:
-#     {
-#     'max_depth': (50,100,150,200),
-#     'min_samples_split': (50,40,30,20,10,2,1),
-#     'random_state' : [0]
-#     }"""
-#
-#     temp_cls_ = DecisionTreeClassifier()
-#
-#     parameters = {
-#     'max_depth': (50,100,150,200),
-#     'min_samples_split': (50,40,30,20,10,2),
-#     'random_state' : [0]
-#     }
-#
-#     param_tuner_ = GridSearchCV(temp_cls_, parameters, cv=cv_size)
-#     param_tuner_.fit(X, y)
-#     cls = param_tuner_.best_estimator_.fit(X, y)
-#     return cls, param_tuner_.best_score_
-#
-#
-#
-#
-# def logisticRegression(X, y, cv_size = 5):
-#     """The following function is used to perform logistic regression for classification.
-#     @X This is the feature vector of type numpy
-#     @y labels of type numpy
-#     @return It returns LogisticRegression object
-#
-#     This function uses GridSearchCV to tune the parameters for the best performance
-#     The parameters are as follows:
-#     {
-#     'penalty': ('l1', 'l2', 'elasticnet'),
-#     'dual': (True, False),
-#     'C': [1,4,10],
-#     'solver': ('newton-cg’, ‘lbfgs’, ‘liblinear’, ‘sag’, ‘saga’),
-#     'random_state' : [0]
-#     }"""
-#
-#     temp_cls_ = LogisticRegression()
-#
-#     parameters = {
-#     'C': [1,2,3,4,5,6,7,8,9,10],
-#     'random_state': [0]
-#     }
-#
-#     param_tuner_ = GridSearchCV(temp_cls_, parameters, cv=cv_size)
-#     param_tuner_.fit(X, y)
-#     cls = param_tuner_.best_estimator_.fit(X, y)
-#     return cls, param_tuner_.best_score_
-#
-#
-#
-# def svmClassifier(X, y, cv_size = 5):
-#     """The following function is used to perform SVM for classification.
-#     @X This is the feature vector of type numpy
-#     @y labels of type numpy
-#     @ cv_size The k-fold size
-#     @return It returns SVC object and accuracy score value
-#
-#     This function uses GridSearchCV to tune the parameters for the best performance
-#     The parameters are as follows:
-#     {
-#     'kernel': ('linear', 'rbf', 'poly', 'sigmoid'),
-#     'degree': [2,3,4,5,6]
-#     'C': [1,4,10],
-#     'gamma': ['auto', 'scale']
-#     }"""
-#
-#     temp_cls_ = SVC()
-#
-#     parameters = {
-#     'kernel': ('linear', 'rbf'),
-#     'C': reciprocal(1,2).rvs(1000),
-#     'gamma': ['auto', 'scale'],
-#     'random_state' : [0]
-#     }
+def decisionTree(X, y, cv_size = 5):
+    """The following function is used to perform decision tree for classification.
+    @X This is the feature vector of type numpy
+    @y labels of type numpy
+    @return It returns DecisionTreeClassifier object
+
+    This function uses GridSearchCV to tune the parameters for the best performance
+    The parameters are as follows:
+    {
+    'max_depth': (50,100,150,200),
+    'min_samples_split': (50,40,30,20,10,2,1),
+    'random_state' : [0]
+    }"""
+
+    temp_cls_ = DecisionTreeClassifier()
+
+    parameters = {
+    'max_depth': (50,100,150,200),
+    'min_samples_split': (50,40,30,20,10,2),
+    'random_state' : [0]
+    }
+
+    param_tuner_ = GridSearchCV(temp_cls_, parameters, cv=cv_size)
+    param_tuner_.fit(X, y)
+    cls = param_tuner_.best_estimator_.fit(X, y)
+    return cls, param_tuner_.best_score_
+
+
+
+
+def logisticRegression(X, y, cv_size = 5):
+
+
+    temp_cls_ = LogisticRegression()
+
+    parameters = {
+    'C': [1,2,3,4,5,6,7,8,9,10],
+    'random_state': [0]
+    }
+
+    param_tuner_ = GridSearchCV(temp_cls_, parameters, cv=cv_size)
+    param_tuner_.fit(X, y)
+    cls = param_tuner_.best_estimator_.fit(X, y)
+    return cls, param_tuner_.best_score_
+
+
+
+def svmClassifier(X, y, cv_size = 5):
+    """The following function is used to perform SVM for classification.
+    @X This is the feature vector of type numpy
+    @y labels of type numpy
+    @ cv_size The k-fold size
+    @return It returns SVC object and accuracy score value
+
+    This function uses GridSearchCV to tune the parameters for the best performance
+    The parameters are as follows:
+    {
+    'kernel': ('linear', 'rbf', 'poly', 'sigmoid'),
+    'degree': [2,3,4,5,6]
+    'C': [1,4,10],
+    'gamma': ['auto', 'scale']
+    }"""
+
+    temp_cls_ = SVC()
+
+    parameters = {
+    'C': reciprocal(1,100).rvs(5),
+    'gamma': reciprocal(1,100).rvs(5),
+    'random_state' : [0]
+    }
 
     param_tuner_ = RandomizedSearchCV(temp_cls_, parameters, cv=cv_size, n_iter=16)
     param_tuner_.fit(X, y)
     cls = param_tuner_.best_estimator_.fit(X, y)
     return cls, param_tuner_.best_score_
 
-
-# Diabetic Retinopathy##
-arff_dataset, meta = arff.loadarff(CURDIR+ '/datasets/messidor_features.arff')
+#
+## Diabetic Retinopathy##
+arff_dataset, meta = arff.loadarff(CURDIR + '/datasets/messidor_features.arff')
 dataset = np.array(arff_dataset.tolist(), dtype=np.int8)
-
+#
 X_original = dataset[:, 0:18]
 X_scaled = scale(X_original)
 y = dataset[:, 19]
-
-#X_original = scale(X_original)
-
-#Divide the dataset into two parts.
-#a) Training data (75%)
-#b) Testing data (25%)
+#
+X_original = scale(X_original)
+#
+# #Divide the dataset into two parts.
+# #a) Training data (75%)
+# #b) Testing data (25%)
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0)
 X_train_scaled, X_test_scaled, y_train_scaled, y_test_scaled = train_test_split(X_scaled, y, test_size=0.25, random_state=0)
-
-
-#random Forest
-random_forest_unscaled, cv_score_unscaled = RandomForestClassifier(X_train, y_train)
-random_forest_scaled, cv_score_scaled = RandomForestClassifier(X_train_scaled, y_train_scaled)
+#
+#Adaboost
+support_vector_unscaled, cv_score_unscaled = adaBoost(DecisionTreeClassifier(), X_train, y_train)
 
 print('#'*10, 'Diabetic Retinopathy', '#'*10)
 
 print('\n')
 
-print('random forest (accuracy without scaling): ', accuracy_score(random_forest_unscaled.predict(X_test), y_test))
-print('Cross validation (without scaling):', cv_score_unscaled)
+print('Adaboost : ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
+print('Cross validation:', cv_score_unscaled)
 
-print('\n')
 
-print('Random Forest (accuracy with scaling): ', accuracy_score(random_forest_scaled.predict(X_test_scaled), y_test_scaled))
-print('Cross validation (with scaling):', cv_score_scaled)
+#Random
+decision_tree, cv_score = randomForest(X_train, y_train)
 
-print('\n')
-
-#decision tree
-decision_tree, cv_score = decisionTree(X_train, y_train)
-
-print('decision tree:', accuracy_score(decision_tree.predict(X_test), y_test))
+print('random forest:', accuracy_score(decision_tree.predict(X_test), y_test))
 print('Cross validation:', cv_score)
 
 print('\n')
 
 # ################################################################################################################################################################################
-
-
+#
+#
 # Breast Cancer wisconsin
 path = CURDIR + '/datasets/wdbc.data'
 replace_ = {
@@ -375,36 +353,27 @@ X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.2
 X_train_scaled, X_test_scaled, y_train_scaled, y_test_scaled = train_test_split(X_scaled, y, test_size=0.25, random_state=0)
 
 
-#support vector machine
-support_vector_unscaled, cv_score_unscaled = svmClassifier(X_train, y_train)
-support_vector_scaled, cv_score_scaled = svmClassifier(X_train_scaled, y_train_scaled)
+support_vector_unscaled, cv_score_unscaled = adaBoost(DecisionTreeClassifier(), X_train, y_train)
 
 print('#'*10, 'Breast Cancer wisconsin', '#'*10)
 
 print('\n')
 
-print('support vector machine (accuracy without scaling): ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
-print('Cross validation (without scaling):', cv_score_unscaled)
+print('Adaboost : ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
+print('Cross validation:', cv_score_unscaled)
 
-print('\n')
 
-print('support vector machine (accuracy with scaling): ', accuracy_score(support_vector_scaled.predict(X_test_scaled), y_test_scaled))
-print('Cross validation (with scaling):', cv_score_scaled)
+#Random
+decision_tree, cv_score = randomForest(X_train, y_train)
 
-print('\n')
-
-#decision tree
-decision_tree, cv_score = decisionTree(X_train, y_train)
-
-print('decision tree:', accuracy_score(decision_tree.predict(X_test), y_test))
+print('random forest:', accuracy_score(decision_tree.predict(X_test), y_test))
 print('Cross validation:', cv_score)
 
 print('\n')
 
-
 ################################################################################################################################################################################
-
-
+#
+#
 #seismic bumps
 
 path = CURDIR + '/datasets/seismic-bumps.arff'
@@ -426,32 +395,25 @@ X_original = X_original[:,0:24]
 
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0)
 
-support_vector_unscaled, cv_score_unscaled = svmClassifier(X_train, y_train)
-support_vector_scaled, cv_score_scaled = svmClassifier(X_train_scaled, y_train_scaled)
+support_vector_unscaled, cv_score_unscaled = adaBoost(DecisionTreeClassifier(), X_train, y_train)
 
-print('#'*10, 'Seismic bumps', '#'*10)
-
-print('\n')
-
-print('support vector machine (accuracy without scaling): ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
-print('Cross validation (without scaling):', cv_score_unscaled)
+print('#'*10, 'Sesimic bumps', '#'*10)
 
 print('\n')
 
-print('support vector machine (accuracy with scaling): ', accuracy_score(support_vector_scaled.predict(X_test_scaled), y_test_scaled))
-print('Cross validation (with scaling):', cv_score_scaled)
+print('Adaboost : ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
+print('Cross validation:', cv_score_unscaled)
 
-print('\n')
 
-#decision tree
-decision_tree, cv_score = decisionTree(X_train, y_train)
+#Random
+decision_tree, cv_score = randomForest(X_train, y_train)
 
-print('decision tree:', accuracy_score(decision_tree.predict(X_test), y_test))
+print('random forest:', accuracy_score(decision_tree.predict(X_test), y_test))
 print('Cross validation:', cv_score)
 
 print('\n')
 
-#
+
 # ################################################################################################################################################################################
 
 #Adult
@@ -486,61 +448,59 @@ print('Cross validation:', cv_score)
 print('\n')
 
 
-###########################################################################################################################################################################
+############################################################################################################################################################################
 
-ThoraricSurgery
+#ThoraricSurgery
 
 
 path = CURDIR + '/datasets/ThoraricSurgery.arff'
-
+#
 data, meta = arff.loadarff(path)
 temp = data.tolist()
 data = pd.DataFrame(temp)
-
+#
 utf_8_data = pd.DataFrame(index=data.index)
-
+#
 for col, col_data in data.iteritems():
-    if(col_data.dtype == object):
-        col_data = data[col].str.decode('utf-8')
-    utf_8_data = utf_8_data.join(col_data)
+     if(col_data.dtype == object):
+         col_data = data[col].str.decode('utf-8')
+     utf_8_data = utf_8_data.join(col_data)
 
 X_original = preprocessFeatures(utf_8_data, [0,3,4,5,6,7,8,9,10,11,12,13,14,16], False).to_numpy()
-
+#
 y = np.array(list(map(int, X_original[:,37])))
 X_original = X_original[:,0:37]
-
+#
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0)
-
-
-support_vector_unscaled, cv_score_unscaled = svmClassifier(X_train, y_train)
+#
+#
+support_vector_unscaled, cv_score_unscaled = adaBoost(DecisionTreeClassifier(), X_train, y_train)
 
 print('#'*10, 'ThoraricSurgery', '#'*10)
 
 print('\n')
 
-print('support vector machine (accuracy without scaling): ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
-print('Cross validation (without scaling):', cv_score_unscaled)
+print('Adaboost : ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
+print('Cross validation:', cv_score_unscaled)
 
-print('\n')
 
-#decision tree
-decision_tree, cv_score = decisionTree(X_train, y_train)
+#Random
+decision_tree, cv_score = randomForest(X_train, y_train)
 
-print('decision tree:', accuracy_score(decision_tree.predict(X_test), y_test))
+print('random forest:', accuracy_score(decision_tree.predict(X_test), y_test))
 print('Cross validation:', cv_score)
 
 print('\n')
 
-###########################################################################################################################################################################
+############################################################################################################################################################################
 
-Yeast
+#Yeast
 
 path = CURDIR + '/datasets/yeast.data'
 
 data = np.genfromtxt(path, dtype=str)
-dataset = data
 
-dataset = preprocessFeatures(dataset, [0], False).to_numpy()
+dataset = preprocessFeatures(pd.DataFrame(data), [0], False).to_numpy()
 
 y = dataset[:, dataset.shape[1] - 1]
 X_original = dataset[:, 0:dataset.shape[1] - 1]
@@ -549,25 +509,23 @@ X_original = dataset[:, 0:dataset.shape[1] - 1]
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0)
 
 
-support_vector_unscaled, cv_score_unscaled = svmClassifier(X_train, y_train)
+support_vector_unscaled, cv_score_unscaled = adaBoost(DecisionTreeClassifier(), X_train, y_train)
 
-print('#'*10, 'Yeast', '#'*10)
-
-print('\n')
-
-print('support vector machine (accuracy without scaling): ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
-print('Cross validation (without scaling):', cv_score_unscaled)
+print('#'*10, 'yeast', '#'*10)
 
 print('\n')
 
-#decision tree
-decision_tree, cv_score = decisionTree(X_train, y_train)
+print('Adaboost : ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
+print('Cross validation:', cv_score_unscaled)
 
-print('decision tree:', accuracy_score(decision_tree.predict(X_test), y_test))
+
+#Random
+decision_tree, cv_score = randomForest(X_train, y_train)
+
+print('random forest:', accuracy_score(decision_tree.predict(X_test), y_test))
 print('Cross validation:', cv_score)
 
 print('\n')
-
 ############################################################################################################################################################################
 
 #Faults
@@ -581,21 +539,122 @@ X_original = StandardScaler().fit(dataset[:,:dataset.shape[1]-7]).transform(data
 
 X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0)
 
-support_vector_unscaled, cv_score_unscaled = svmClassifier(X_train, y_train)
+support_vector_unscaled, cv_score_unscaled = adaBoost(DecisionTreeClassifier(), X_train, y_train)
 
-print('#'*10, 'Fault', '#'*10)
-
-print('\n')
-
-print('support vector machine (accuracy without scaling): ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
-print('Cross validation (without scaling):', cv_score_unscaled)
+print('#'*10, 'fault', '#'*10)
 
 print('\n')
 
-#decision tree
-decision_tree, cv_score = decisionTree(X_train, y_train)
+print('Adaboost : ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
+print('Cross validation:', cv_score_unscaled)
 
-print('decision tree:', accuracy_score(decision_tree.predict(X_test), y_test))
+
+#Random
+decision_tree, cv_score = randomForest(X_train, y_train)
+
+print('random forest:', accuracy_score(decision_tree.predict(X_test), y_test))
+print('Cross validation:', cv_score)
+
+print('\n')
+############################################################################################################################################################################
+
+#default_of_credit_card_clients
+path = CURDIR + '/datasets/default_of_credit_card_clients.xls'
+
+dataset = pd.read_excel(path, skiprows=[1])
+
+data = dataset.to_numpy()
+y = data[:, data.shape[1] -1]
+X_original = data[:, 1: data.shape[1] -1]
+
+
+
+X_original = StandardScaler().fit(X_original).transform(X_original)
+
+X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.4, random_state=0)
+
+support_vector_unscaled, cv_score_unscaled = adaBoost(DecisionTreeClassifier(), X_train, y_train)
+
+print('#'*10, 'default credit card', '#'*10)
+
+print('\n')
+
+print('Adaboost : ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
+print('Cross validation:', cv_score_unscaled)
+
+
+#Random
+decision_tree, cv_score = randomForest(X_train, y_train)
+
+print('random forest:', accuracy_score(decision_tree.predict(X_test), y_test))
+print('Cross validation:', cv_score)
+
+print('\n')
+
+############################################################################################################################################################################
+
+#German
+
+path = CURDIR + '/datasets/german.data'
+
+data = np.genfromtxt(path, dtype=str)
+
+dataset = preprocessFeatures(pd.DataFrame(data), [0,2,3,5,6,8,9,11,13,14,16,18,19], False).to_numpy()
+
+y = dataset[:, dataset.shape[1] - 1]
+X_original = dataset[:, 0:dataset.shape[1] - 1]
+
+
+X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0)
+
+support_vector_unscaled, cv_score_unscaled = adaBoost(DecisionTreeClassifier(), X_train, y_train)
+
+print('#'*10, 'German', '#'*10)
+
+print('\n')
+
+print('Adaboost : ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
+print('Cross validation:', cv_score_unscaled)
+
+
+#Random
+decision_tree, cv_score = randomForest(X_train, y_train)
+
+print('random forest:', accuracy_score(decision_tree.predict(X_test), y_test))
+print('Cross validation:', cv_score)
+
+print('\n')
+
+############################################################################################################################################################################
+
+#Australian
+
+path = CURDIR + '/datasets/australian.dat'
+
+data = pd.DataFrame(np.loadtxt(path))
+#
+dataset = preprocessFeatures(data, [0,3,4,5,7,8,10,11], False).to_numpy()
+#
+y = dataset[:, dataset.shape[1] - 1]
+X_original = dataset[:, 0:dataset.shape[1] - 1]
+#
+#
+X_train, X_test, y_train, y_test = train_test_split(X_original, y, test_size=0.25, random_state=0)
+#
+support_vector_unscaled, cv_score_unscaled = adaBoost(DecisionTreeClassifier(), X_train, y_train)
+
+print('#'*10, 'Australian', '#'*10)
+
+print('\n')
+
+print('Adaboost : ', accuracy_score(support_vector_unscaled.predict(X_test), y_test))
+print('Cross validation:', cv_score_unscaled)
+
+
+#Random
+decision_tree, cv_score = randomForest(X_train, y_train)
+
+print('random forest:', accuracy_score(decision_tree.predict(X_test), y_test))
 print('Cross validation:', cv_score)
 
 print('\n')
